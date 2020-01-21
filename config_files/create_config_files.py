@@ -6,7 +6,7 @@ import os
 if __name__ == "__main__":
     datasets = ["fb15k-237", "wnrr", "fb15k", "wn18"]
     train_types = ["1vsAll", "KvsAll", "negative_sampling"]
-    template_filename = "templates_iclr.yaml"
+    template_filename = "templates_iclr2020.yaml"
 
     # parse args
     parser = argparse.ArgumentParser()
