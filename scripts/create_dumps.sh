@@ -1,7 +1,10 @@
 #!/bin/sh
 
+kge_location=$1
+keys=$2
+
 for d in */ ; do
 	cd $d
-	python /work/druffine/kge/kge.py dump trace . --keysfile /work/druffine/kge-configs/search/scripts/iclr2020_keys.conf > trace_dump.csv
+	python $kge_location dump trace . --keysfile $keys > trace_dump.csv
 	cd ..
 done

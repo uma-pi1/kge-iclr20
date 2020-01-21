@@ -1,6 +1,6 @@
 # You CAN Teach an Old Dog New Tricks! On Training Knowledge Graph Embeddings
 
-This repository contains the data dumps as well as the scripts to reproduce all experiments conducted for the paper ["You CAN Teach an Old Dog New Tricks! On Training Knowledge Graph Embeddings"](https://openreview.net/forum?id=BkxSmlBFvr) published at ICLR 2020. In this work, we conduct an extensive experimental study on the effect of hyperparameter optimization on various Knowledge Graph Embedding (KGE) models.
+This repository contains the data dumps of all the results we produced, as well as the scripts to reproduce the experiments conducted for the paper ["You CAN Teach an Old Dog New Tricks! On Training Knowledge Graph Embeddings"](https://openreview.net/forum?id=BkxSmlBFvr) published at ICLR 2020. In this work, we conduct an extensive experimental study on the effect of hyperparameter optimization on various Knowledge Graph Embedding (KGE) models.
 
 ## ICLR 2020 data dumps
 
@@ -8,7 +8,7 @@ The results of each of the trials we run for ICLR 2020 can be found in [data_dum
 
 ## Reproducing our experiments
 
-The following describes how to use the scripts provided in this repository to reproduce our experiments.
+The following describes how to use the scripts provided in this repository to reproduce our experiments. All scripts can be easily adapted to your scenario.
 
 ### Code
 
@@ -42,7 +42,7 @@ Once the SOBOL phase is done, we followed with a Bayesian phase, where we took t
 python create_bayes_config_files.py --prefix complex --dump_best_model
 ```
 
-This command goes through all searches for the ComplEx model and finds the most successful trial, according to the metric used for model selection in the SOBOL phase. It outputs the config file for the Bayesian search inside a new folder with the same name of the winning config file plus the <em>bo</em> suffix.
+This command goes through all searches for the ComplEx model and finds the most successful trial, according to the metric used for model selection in the SOBOL phase. It outputs the config file for the Bayesian search inside a new folder with the same name of the winning config file plus the <em>bo</em> suffix. Additionally, the <em>dump_best_model</em> parameter creates a readable file with the settings of the best trial found for the model.
 
 ### Include the best models in the Bayesian phase
 
@@ -53,13 +53,21 @@ Optionally, you may include the best models found in the SOBOL phase in your Bay
 Finally, the scripts [create_dumps.sh](scripts/create_dumps.sh) and [merge_csvs.sh](scripts/merge_csvs.sh) can be used to create a single CSV file per dataset with the results of all trials in the experiments. To do so, you may run this on the folder of each dataset:
 
 ```sh
-sh create_dumps.sh
+sh create_dumps.sh kge.py scripts/iclr2020_keys.conf
 ```
 
-This creates a CSV file with the result of each trial for each combination of training type and loss function. To merge all of these entries into a single CSV, you may run the following on the folder of each dataset:
+The first parameter indicates the location of the libkge executable and the second the set of keys to be used as columns in the output CSV filem in this case [iclr2020_keys.conf](scripts/iclr2020_keys.conf). The output is a CSV file with the result of all trials for each combination of training type and loss function. To merge all of these entries into a single CSV, you may run the following on the folder of each dataset:
 
 ```sh
 sh merge_csvs.sh
 ```
 
-This produces a single CSV file with the result of each trial for that dataset, much like those we provide in the (data_dumps)[data_dumps] folder.
+This produces a single CSV file with the result of each trial for that dataset, much like those we provide in the [data_dumps](data_dumps) folder.
+
+### Plot the results
+
+To produce the plots used in our work, you may feed your data dumps to the script [create_plots.py](scripts/create_plots.py) like so:
+
+```sh
+python create_plots.py --csv iclr2020-wnrr-all-trials.csv --output_folder iclr2020-plots
+```
