@@ -1,0 +1,17 @@
+model: conve
+ax_search:
+  parameters:
+    # ConvE
+    - name: conve.feature_map_dropout
+      type: range
+      bounds: [0., 0.5]
+    - name: conve.projection_dropout
+      type: range
+      bounds: [0., 0.5]
+    - name: conve.convolution_bias
+      type: choice
+      values: [True, False]
+    - name: conve.round_dim
+      type: fixed
+      value: True
+

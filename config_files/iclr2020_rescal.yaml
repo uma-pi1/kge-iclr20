@@ -1,0 +1,8 @@
+model: rescal
+ax_search:
+  parameters:
+    # RESCAL
+    - name: rescal.relation_embedder.dim
+      type: fixed 
+      value: -1
+

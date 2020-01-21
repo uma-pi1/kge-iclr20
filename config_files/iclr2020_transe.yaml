@@ -1,0 +1,17 @@
+model: transe
+ax_search:
+  parameters:
+    # TRANSE
+    - name: transe.l_norm
+      type: choice
+      values: [1., 2.]
+      is_ordered: True
+    - name: transe.entity_embedder.normalize.p
+      type: choice
+      values: [-1., 2.]
+    - name: transe.relation_embedder.normalize.p
+      type: choice
+      values: [-1., 2.]
+    - name: negative_sampling.implementation  #train_type: negative_sampling
+      type: fixed                             #train_type: negative_sampling
+      value: spo                              #train_type: negative_sampling
