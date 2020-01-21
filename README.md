@@ -46,7 +46,7 @@ This command goes through all searches for the ComplEx model and finds the most 
 
 ### Include the best models in the Bayesian phase (optional)
 
-The Bayesian phase includes 10 SOBOL trials. Optionally, you may want to make sure the best model found in the SOBOL phase is also included in these first trials of the Bayesian search. We provide the script [add_best_model_to_bayes_search.py](config_files/add_best_model_to_bayes_search) for such a purpose. To use it correctly, you need to have dumped the best model settings when creating the Bayes config files, as shown in the previous section. Then, you need to start the search, so the corresponding checkpoint file is created. Once the search is underway, you stop it and run the following:
+The Bayesian phase includes 10 SOBOL trials at first. Optionally, you may want to make sure the best model found in the SOBOL phase is also included in these first trials of the Bayesian search. We provide the script [add_best_model_to_bayes_search.py](config_files/add_best_model_to_bayes_search) for such a purpose. To use it correctly, you need to have dumped the best model settings when creating the Bayes config files, as shown in the previous section. Then, you need to start the search, so the corresponding checkpoint file is created. Once the search is underway, you stop it and run the following:
 
 ```sh
 python add_best_model_to_bayes_search.py --checkpoint checkpoint.pt --best_model dump_best_model
