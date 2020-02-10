@@ -11,7 +11,7 @@ from tqdm import tqdm
 from collections import defaultdict, OrderedDict
 
 
-def collect(base_path, dataset, ):
+def collect(base_path, dataset, collected_results, ):
 
     for i, trace_file_name in enumerate(
             sorted(glob.glob('{}/{}/*/*/trace.yaml'.format(base_path, dataset)))
