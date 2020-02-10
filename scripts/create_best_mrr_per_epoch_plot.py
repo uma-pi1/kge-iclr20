@@ -19,8 +19,6 @@ def collect(base_path, dataset, ):
 
         model_ds = trace_file_name.split('/')[-3]
 
-        print('{}###{}'.format(dataset, model_ds))
-
         with open(trace_file_name, 'r') as f:
             for line in tqdm(f.readlines()):
                 entry = dict(filter(lambda x: len(x) == 2, [kv.split(': ') for kv in line[1:-1].split(', ')]))
@@ -56,31 +54,44 @@ if __name__ == '__main__':
     first_epoch_same_as_last_epoch = list()
 
     best_collected_results = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+    best_collected_trial = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
 
-    # collect the best result in each epoch for each mode
     for model_ds in collected_results.keys():
+        print(model_ds)
         dataset, model_traintype_loss = model_ds.split('###')
         if len(model_traintype_loss.split('-')) == 4 or 'bo-best' in model_traintype_loss:
             continue
+        #    print(model_traintype_loss)
         model, traintype, loss = model_traintype_loss.split('-')
         for trial in collected_results[model_ds].keys():
+            # sorted_results_model_ds_trial = sorted(collected_results[model_ds][trial].items(), key=lambda kv: kv[1])
             for (epoch, mrr) in collected_results[model_ds][trial].items():
-                best_collected_results[dataset][model][epoch] = max(best_collected_results[dataset][model][epoch], mrr)
+                if mrr > best_collected_results[dataset][model][epoch]:
+                    best_collected_results[dataset][model][epoch] = mrr
+                    best_collected_trial[dataset][model][epoch] = trial
 
     sky_collected_results = defaultdict(lambda: defaultdict(list))
+    sky_collected_results_trial = defaultdict(lambda: defaultdict(list))
 
-    # now compute the skyline
+    # print(best_collected_trial)
+
     for dataset in best_collected_results.keys():
         for model in best_collected_results[dataset].keys():
             sorted_best_collected_results = sorted(best_collected_results[dataset][model].items(), key=lambda kv: kv[0])
             skyline_list = [sorted_best_collected_results[0]]
+            trials_ticks_in_skyline = []
             best = 0
+            best_trial = '-'
             for i in range(1, len(sorted_best_collected_results)):
-                best = max(sorted_best_collected_results[i][1], best)
-                skyline_list.append(
-                    (sorted_best_collected_results[i][0], best)
-                )
+                epoch = sorted_best_collected_results[i][0]
+                if sorted_best_collected_results[i][1] > best:
+                    best = sorted_best_collected_results[i][1]
+                    if best_trial != best_collected_trial[dataset][model][epoch]:
+                        best_trial = best_collected_trial[dataset][model][epoch]
+                        trials_ticks_in_skyline.append((epoch, best))
+                skyline_list.append((epoch, best))
             sky_collected_results[dataset][model] = skyline_list
+            sky_collected_results_trial[dataset][model] = trials_ticks_in_skyline
 
     fig, axes = plt.subplots(nrows=1, ncols=2)
 
@@ -97,15 +108,20 @@ if __name__ == '__main__':
     })
 
     ylim = {
-        'wnrr': (0.19, 0.48),
-        'fb15k-237': (0.19, 0.48),
+        'wnrr': (19, 48),
+        'fb15k-237': (19, 48),
     }
 
     for dataset, ax in zip(sky_collected_results.keys(), axes):
-        ax.set_ylabel("MRR")
         for model in trans.keys():
+            ax.set_ylabel("Validation MRR")
             if model in sky_collected_results[dataset]:
-                df = pandas.DataFrame(sky_collected_results[dataset][model], columns=['epoch', trans[model]])
-                df.plot.line(x='epoch', y=trans[model], ax=ax, ylim=ylim[dataset], figsize=(12, 4), title=trans[dataset])
+                data = [(x, y * 100) for x, y in sky_collected_results[dataset][model]]
+                data_ticks = [(x, y * 100) for x, y in sky_collected_results_trial[dataset][model]]
+                df = pandas.DataFrame(data, columns=['Epoch', trans[model]])
+                ax = df.plot.line(x='Epoch', y=trans[model], ax=ax, ylim=ylim[dataset], figsize=(12, 4), title=trans[dataset])
+                color = ax.get_lines()[-1].get_color()
+                df = pandas.DataFrame(data_ticks, columns=['Epoch', trans[model]])
+                df.plot.scatter(x='Epoch', y=trans[model], ax=ax, ylim=ylim[dataset], figsize=(12, 4), title=trans[dataset], marker='o', c=color)
 
     fig.savefig("{}/best_mrr_per_epoch.pdf".format(args.output_folder), bbox_inches='tight', dpi=300)
