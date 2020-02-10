@@ -2,7 +2,7 @@ import argparse
 import json
 import pickle
 import glob
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import seaborn
 import pandas
 import numpy
