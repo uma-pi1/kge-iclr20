@@ -101,7 +101,7 @@ if __name__ == '__main__':
         'distmult': 'DistMult',
         'complex': 'ComplEx',
         'conve': 'ConvE',
-        'fb15k-237': 'FB15K 237',
+        'fb15k-237': 'FB15K-237',
         'wnrr': 'WNRR',
         'fb15k': 'FB15k',
         'wn18': 'WN18',
