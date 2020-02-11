@@ -115,7 +115,10 @@ if __name__ == '__main__':
     font_size = 7.5
     for dataset, ax in zip(sky_collected_results.keys(), axes):
         for model in trans.keys():
-            ax.set_ylabel("Validation MRR", fontsize=font_size)
+            if dataset not in ['wnrr']:
+                ax.set_ylabel("Validation MRR", fontsize=font_size)
+            else:
+                ax.set_ylabel(" ", fontsize=font_size)
             ax.set_xlabel(ax.get_xlabel(), fontsize=font_size)
             ax.title.set_size(font_size)
             ax.tick_params(labelsize=font_size)
@@ -123,10 +126,13 @@ if __name__ == '__main__':
                 data = [(x, y * 100) for x, y in sky_collected_results[dataset][model]]
                 data_ticks = [(x, y * 100) for x, y in sky_collected_results_trial[dataset][model]]
                 df = pandas.DataFrame(data, columns=['Epoch', trans[model]])
-                ax = df.plot.line(x='Epoch', y=trans[model], ax=ax, ylim=ylim[dataset], figsize=(6.4, 2.4), title=trans[dataset])
+                ax = df.plot.line(x='Epoch', y=trans[model], ax=ax, ylim=ylim[dataset], figsize=(6.4, 2.4), title=trans[dataset], linewidth=1)
                 color = ax.get_lines()[-1].get_color()
                 df = pandas.DataFrame(data_ticks, columns=['Epoch', trans[model]])
-                df.plot.scatter(x='Epoch', y=trans[model], ax=ax, ylim=ylim[dataset], figsize=(6.4, 2.4), title=trans[dataset], marker='o', c=color)
+                df.plot.scatter(x='Epoch', y=trans[model], ax=ax, ylim=ylim[dataset], figsize=(6.4, 2.4), title=trans[dataset], marker='o', s=8, c=color)
+                ax.legend(prop={'size': font_size})
+        if dataset not in ['wnrr']:
+            ax.get_legend().remove()
 
     fig.savefig("{}/best_mrr_per_epoch.pdf".format(args.output_folder), bbox_inches='tight', dpi=300)
 
