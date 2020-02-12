@@ -11,23 +11,18 @@ def get_category_order_labels(category_order, attribute, model, row):
 
     labels = []
     if attribute == "train_type_loss":
-        if current_model == 'transe':
-            category_order = ['negative_sampling-margin_ranking', 'negative_sampling-kl']
-            if not len(labels):
-                labels = ['NegSamp+MR', 'NegSamp+CE']
-        else:
-            category_order = ['negative_sampling-margin_ranking',
-                    'negative_sampling-bce',
-                    '1vsAll-bce',
-                    'KvsAll-bce',
-                    'negative_sampling-kl',
-                    '1vsAll-kl',
-                    'KvsAll-kl'
-                    ]
-            if not len(labels):
-                labels = ['NegSamp+MR', 
-                        'NegSamp+BCE', '1vsAll+BCE', 'KvsAll+BCE', 
-                        'NegSamp+CE', '1vsAll+CE', 'KvsAll+CE']
+        category_order = ['negative_sampling-margin_ranking',
+                'negative_sampling-bce',
+                '1vsAll-bce',
+                'KvsAll-bce',
+                'negative_sampling-kl',
+                '1vsAll-kl',
+                'KvsAll-kl'
+                ]
+        if not len(labels):
+            labels = ['NegSamp+MR', 
+                    'NegSamp+BCE', '1vsAll+BCE', 'KvsAll+BCE', 
+                    'NegSamp+CE', '1vsAll+CE', 'KvsAll+CE']
     elif attribute == "reciprocal":
         if current_model == "conve":
             category_order = [1]
@@ -39,6 +34,9 @@ def get_category_order_labels(category_order, attribute, model, row):
         category_order = [0, 1]
         labels = ["No Dropout", "Dropout"]
     elif attribute == "dropout_r":
+        category_order = [0, 1]
+        labels = ["No Dropout", "Dropout"]
+    elif attribute == "dropout":
         category_order = [0, 1]
         labels = ["No Dropout", "Dropout"]
     elif attribute == "emb_initialize":
@@ -75,8 +73,7 @@ if __name__ == '__main__':
             'emb_regularize_p', 
             'emb_initialize',
             'reciprocal',
-            'dropout_e',
-            'dropout_r',
+            'dropout'
             ]
 
     # load input CSVs
@@ -92,10 +89,14 @@ if __name__ == '__main__':
     # add dropout/no dropout column
     all_data['dropout_e'] = np.where(all_data.emb_e_dropout > 0, 1, 0)
     all_data['dropout_r'] = np.where(all_data.emb_r_dropout > 0, 1, 0)
+    all_data['dropout'] = np.where((all_data.emb_e_dropout > 0) | (all_data.emb_r_dropout > 0), 1, 0)
 
     # deal with empty string in emb_regularize_p
     all_data['emb_regularize_p'] = all_data['emb_regularize_p'].fillna(0)
 
+    # make sure no Bayesian trials are included
+    all_data = all_data.loc[~all_data['folder'].str.contains("-bo")]
+    
     # create output folder
     output_folder = args.output_folder
     if os.path.isdir(output_folder):
@@ -110,7 +111,7 @@ if __name__ == '__main__':
     models = all_data.model.unique()
 
     # set metric label
-    metric_label = "MRR"
+    metric_label = "Validation MRR"
 
     # order and label for models
     model_order = ['rescal', 'transe', 'distmult', 'complex', 'conve']
@@ -119,9 +120,10 @@ if __name__ == '__main__':
     # plot MRR per model
     print("Plotting metric per model...")
     f, axes = plt.subplots(1, len(datasets), sharex=True, sharey=True)
-    f.set_size_inches(12, 5)
-    plt.figure(figsize=(15, 15))
-    plt.subplots_adjust(hspace=0.2, wspace=0.2)
+    f.set_size_inches(6.4, 2.4)
+    plt.subplots_adjust(hspace=0.2, wspace=0.1)
+    font_size = 7.5
+    label_rotation=15
     for i in range(len(datasets)):
         current_dataset = datasets[i]
         title = dataset_labels[i]
@@ -130,66 +132,165 @@ if __name__ == '__main__':
         dataset_data = all_data.loc[all_data['dataset'] == current_dataset]
 
         # create plots
-        mrr_per_model = sns.boxplot(y=dataset_data['metric'], 
+        mrr_per_model = sns.boxplot(y=dataset_data['metric']*100, 
                 x=dataset_data['model'], 
                 order=model_order,
+                linewidth=0.5,
+                fliersize=1,
                 width=0.8,
-                ax=axes[i]).set_title(title)
+                ax=axes[i])
+        mrr_per_model.set_title(title, size=font_size)
+        mrr_per_model.tick_params(labelsize=font_size)
+        if i == 0:
+            mrr_per_model.set_ylabel(metric_label, fontsize=font_size)
+        else:
+            mrr_per_model.set_ylabel('')
 
     for ax in axes.flat:
-        ax.set(xlabel='', ylabel=metric_label)
-        ax.set_xticklabels(model_labels, fontsize=10)
+        ax.set_xticklabels(model_labels)
+        ax.set(xlabel='')
 
-    mrr_per_model.get_figure().savefig(output_folder + '/metric_per_model.png', dpi=300)
+    # save figure
+    mrr_per_model.get_figure().savefig(
+            output_folder + '/metric_per_model.pdf', 
+            dpi=300,
+            bbox_inches='tight',
+            pad_inches=0)
 
     # plot each attribute vs metric
     for attribute in attributes:
-        print("Plotting {}...".format(attribute))
+        attribute_name = attribute
+        print("Plotting {}...".format(attribute_name))
 
         # create plot
         label_rotation=30
+        font_size = 7.5
         num_rows = len(datasets)
         num_cols = len(models)
-        f, axes = plt.subplots(num_rows, num_cols, sharex=False, sharey=True)
+
+        # manage with/no penalty dropouts
+        if "_no_penalty" in attribute_name:
+            attribute = attribute[:-len("_no_penalty")]
+        elif "_with_penalty" in attribute_name:
+            attribute = attribute[:-len("_with_penalty")]
+
+        # skip Conve if reciprocal
+        if attribute == "reciprocal":
+            num_cols = len(models) - 1
+
+        f, axes = plt.subplots(num_rows, num_cols, sharex=True, sharey=True)
         if attribute == "train_type_loss":
-            f.set_size_inches(10, 5)
+            f.set_size_inches(6.1, 3.5)
+        elif attribute == "reciprocal":
+            f.set_size_inches(4.5, 4)
         else:
-            f.set_size_inches(8, 6)
-        plt.subplots_adjust(hspace=0.2, wspace=0.2)
+            f.set_size_inches(6, 4)
+        plt.subplots_adjust(hspace=0.1, wspace=0.2)
         plt.xticks(rotation=label_rotation)
+
+        # add dataset names to subplot rows
+        row_names = ["FB15K-237", "WNRR"]
+        pad = 5
+        for ax, row in zip(axes[:,0], row_names):
+            ax.annotate(row, xy=(0, 0.5), rotation=90, xytext=(-ax.yaxis.labelpad - pad, 0),
+                        xycoords=ax.yaxis.label, textcoords='offset points',
+                        size=font_size, ha='right', va='center')
 
         # each model is a column in the main plot
         for col in range(len(model_order)):
             current_model = model_order[col]
             title = model_labels[col]
 
+            # skip Conve if reciprocal
+            if attribute == "reciprocal" and current_model == "conve":
+                continue
+
             # get data for current model
             model_data = all_data.loc[all_data['model'] == current_model]
 
-            # create each row of the image
+            # manage with/no penalty dropouts
+            if "_no_penalty" in attribute_name:
+                model_data = model_data.loc[model_data['emb_regularize_p'] == 0]
+            elif "_with_penalty" in attribute_name:
+                model_data = model_data.loc[model_data['emb_regularize_p'] > 0]
+
+            # each dataset is a row in the main plot
             for row in range(len(datasets)):
                 current_dataset = datasets[row]
 
                 # set order and labels for categories in x axis of box plot
                 category_order = sorted(model_data[attribute].fillna(0).unique())
                 category_order, labels = get_category_order_labels(category_order, attribute, current_model, row)
+                if attribute == "train_type_loss":
+                    global_legends = labels
+                    labels = ['', '', '', '', '', '', '']
 
                 dataset_data = model_data.loc[model_data['dataset'] == current_dataset]
-                box = sns.boxplot(x=dataset_data[attribute],
-                        y=dataset_data['metric'],
-                        order=category_order,
-                        ax=axes[row][col]).set_title(title)
+                if attribute == "train_type_loss":
+                    colors=sns.color_palette()
+                    box = sns.boxplot(x=dataset_data[attribute],
+                            y=dataset_data['metric']*100,
+                            order=category_order,
+                            linewidth=0.5,
+                            fliersize=1,
+                            palette=colors,
+                            ax=axes[row][col]
+                            )
+                else:
+                    box = sns.boxplot(x=dataset_data[attribute],
+                            y=dataset_data['metric']*100,
+                            order=category_order,
+                            linewidth=0.5,
+                            fliersize=1,
+                            ax=axes[row][col]
+                            )
+
+                if row != len(datasets) - 1:
+                    box.set_title(title, size=font_size)
+                box.tick_params(labelsize=font_size)
+                if col == 0:
+                    box.set_ylabel(metric_label, fontsize=font_size)
+                else:
+                    box.set_ylabel('')
 
                 # add xticks labels
                 axes[row][col].set_xticklabels(labels, ha='right')
 
+        # add labels to box plots
         for ax in axes.flat:
             plt.sca(ax)
             plt.xticks(rotation=label_rotation)
-            ax.set(xlabel='', ylabel=metric_label)
+            ax.set(xlabel='')
+
+        # add legend
+        if attribute == "train_type_loss":
+            proxies = []
+            for i in range(len(global_legends)):
+                proxies.append(plt.Rectangle(
+                    (0,0), 
+                    1, 
+                    1, 
+                    ec='k', 
+                    fc=colors[i], 
+                    linewidth=0.5,
+                    label=global_legends[i]))
+            f.legend(
+                    prop={'size': 5.5},
+                    handles=proxies,
+                    bbox_to_anchor=(0.01, 0.02), 
+                    loc='lower left', 
+                    borderaxespad=0.,
+                    columnspacing=1,
+                    ncol=7, 
+                    frameon=False,
+                    )
 
         # save figure for current attribute            
-        box.get_figure().savefig(output_folder + '/' + attribute + '.png', dpi=300)
+        box.get_figure().savefig(
+                output_folder + '/' + attribute_name + '.pdf', 
+                dpi=300,
+                bbox_inches='tight',
+                pad_inches=0)
 
     print('DONE! Find plots in folder:', output_folder)
 
