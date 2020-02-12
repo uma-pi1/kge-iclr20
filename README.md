@@ -78,3 +78,18 @@ To produce the plots used in our work, you may feed your data dumps to the scrip
 ```sh
 python create_plots.py --csv iclr2020-wnrr-all-trials.csv --output_folder iclr2020-plots
 ```
+
+## How to cite
+
+If you use our code or compare against our results please cite the following publication:
+
+```
+@inproceedings{
+  ruffinelli2020you,
+  title={You {\{}CAN{\}} Teach an Old Dog New Tricks! On Training Knowledge Graph Embeddings},
+  author={Daniel Ruffinelli and Samuel Broscheit and Rainer Gemulla},
+  booktitle={International Conference on Learning Representations},
+  year={2020},
+  url={https://openreview.net/forum?id=BkxSmlBFvr}
+}
+```
