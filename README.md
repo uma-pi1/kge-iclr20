@@ -92,7 +92,7 @@ The <em>checkpoint</em> parameter is used to indicate the location of the checkp
 
 ### Create data dumps with all trials
 
-Finally, the scripts [create_dumps.sh](scripts/create_dumps.sh) and [merge_csvs.sh](scripts/merge-csvs.sh) can be used to create a single CSV file per dataset with the results of all trials in the experiments. To do so, you may run this on the folder of each dataset:
+Finally, the scripts [create_dumps.sh](scripts/create_dumps.sh) and [merge_csvs.sh](scripts/merge_csvs.sh) can be used to create a single CSV file per dataset with the results of all trials in the experiments. To do so, you may run this on the folder of each dataset:
 
 ```sh
 sh create_dumps.sh kge.py scripts/iclr2020_keys.conf
