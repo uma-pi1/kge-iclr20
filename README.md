@@ -44,7 +44,7 @@ The following describes how to use the scripts provided in this repository to re
 
 ### Code
 
-To conduct uur experiments, we used the <em>LibKGE</em> framework available [here](www.github.com/uma-pi1/kge). The framework is controlled entirely by config files in YAML format, which we provide [here](data_dumps) for reproduction purposes.
+To conduct our experiments, we used the <em>LibKGE</em> framework available [here](www.github.com/uma-pi1/kge). The framework is controlled entirely by config files in YAML format, which we provide [here](data_dumps) for reproduction purposes.
 
 ### Generate the config files
 
