@@ -44,21 +44,21 @@ The following describes how to use the scripts provided in this repository to re
 
 ### Code
 
-To conduct our experiments, we used the <em>LibKGE</em> framework available [here](www.github.com/uma-pi1/kge). The framework is controlled entirely by config files in YAML format, which we provide [here](data_dumps) for reproduction purposes.
+To conduct our experiments, we used the <em>LibKGE</em> framework available [here](https://github.com/uma-pi1/kge). The framework is controlled entirely by config files in YAML format, which we provide [here](data_dumps) for reproduction purposes.
 
 ### Generate the config files
 
-The folder [config_files](config_files) contains the scripts to generate each config file we used in our experiments as well as the config files themselves. The first phase of our experiments is a SOBOL (pseudo-random) hyperparameter search. The file [template_iclr2020.yaml](config_files/template_iclr2020.yaml) is a <em>template</em> that contains the general hyperparameter space used for all models on this phase. In addition, each model used in the experimental study may have specific hyperparameters that need to be set, which are specified in separate config files, e.g. [iclr2020_rescal.yaml](config_files/iclr2020_rescal.yaml). To generate the config files to run the hyperparameter optimization, run the following inside the [config_files](config_files) folder:
+The folder [config_files](config_files) contains the scripts to generate each config file we used in our experiments as well as the config files themselves. The first phase of our experiments is a SOBOL (pseudo-random) hyperparameter search. The file [template_iclr2020.yaml](config_files/templates_iclr2020.yaml) is a <em>template</em> that contains the general hyperparameter space used for all models on this phase. In addition, each model used in the experimental study may have specific hyperparameters that need to be set, which are specified in separate config files, e.g. [iclr2020_rescal.yaml](config_files/iclr2020_rescal.yaml). To generate the config files to run the hyperparameter optimization, run the following inside the [config_files](config_files) folder:
 
 ```sh
 python create_config_files.py --prefix iclr2020
 ```
 
-This takes as input all config files with the given prefix and combines them with [template_iclr2020.yaml](config_files/template_iclr2020.yaml). The output is a folder with the same name of the prefix that contains all configuration files, organized in their specific folders. For each dataset, there is a single config file for each combination of train type (negative sampling, 1vsAll, etc.) and loss function.
+This takes as input all config files with the given prefix and combines them with [templates_iclr2020.yaml](config_files/template_iclr2020.yaml). The output is a folder with the same name of the prefix that contains all configuration files, organized in their specific folders. For each dataset, there is a single config file for each combination of train type (negative sampling, 1vsAll, etc.) and loss function.
 
 ### Adding a new model to the search space
 
-To optimize a new model with the same search space, add the model to [LibKGE](www.github.com/uma-pi1/kge), and specify a config file with the specific additional settings for the search space required by your model, e.g. [iclr2020_conve.yaml](config_files/iclr2020_rescal.yaml). Then create the config file as described in the previous section.
+To optimize a new model with the same search space, add the model to [LibKGE](https://github.com/uma-pi1/kge), and specify a config file with the specific additional settings for the search space required by your model, e.g. [iclr2020_conve.yaml](config_files/iclr2020_conve.yaml). Then create the config file as described in the previous section.
 
 ### Start the hyperparameter search
 
@@ -68,11 +68,11 @@ Once the config files are created, run the following on each of those folders to
 python kge.py resume . --search.num_workers 4 --search.device_pool cuda:0,cuda:1
 ```
 
-This command runs 4 trials (arms) of the search space simultaneously using two GPUs. The number of trials as well as the devices used can be specified at will, and they are distributed uniformly. For more details on our to use our <em>LibKGE</em> framework, see [here](www.github.com/uma-pi1/kge).
+This command runs 4 trials (arms) of the search space simultaneously using two GPUs. The number of trials as well as the devices used can be specified at will, and they are distributed uniformly. For more details on our to use our <em>LibKGE</em> framework, see [here](https://github.com/uma-pi1/kge).
 
 ### Further tuning with Bayesian optimization
 
-Once the SOBOL phase is done, we followed with a Bayesian phase, where we took the categorical settings of the best models found in the pseudo-random phase for each search, and further tuned the continuous hyperparameters with Bayesian optimization. The script [create_bayes_config_files](config_files/create_bayes_config_files) can be used to create the config files for this Bayesian phase. For example, to create the config file for the Bayes search of the model ComplEx on FB15K-237, you may run this on the folder of that dataset:
+Once the SOBOL phase is done, we followed with a Bayesian phase, where we took the categorical settings of the best models found in the pseudo-random phase for each search, and further tuned the continuous hyperparameters with Bayesian optimization. The script [create_bayes_config_files](config_files/create_bayes_config_files.py) can be used to create the config files for this Bayesian phase. For example, to create the config file for the Bayes search of the model ComplEx on FB15K-237, you may run this on the folder of that dataset:
 
 ```sh
 python create_bayes_config_files.py --prefix complex --dump_best_model
@@ -82,17 +82,17 @@ This command goes through all searches for the ComplEx model and finds the most 
 
 ### Include the best models in the Bayesian phase (optional)
 
-The Bayesian phase includes 10 SOBOL trials at first. Optionally, it is possible to make sure the best model found in the SOBOL phase is also included in these first trials of the Bayesian search. We provide the script [add_best_model_to_bayes_search.py](config_files/add_best_model_to_bayes_search) for such a purpose. To use it correctly, you need to have dumped the best model settings when creating the Bayes config files, as shown in the previous section. Then, start the search, so the corresponding checkpoint file is created. Once the search is underway, you stop it and run the following:
+The Bayesian phase includes 10 SOBOL trials at first. Optionally, it is possible to make sure the best model found in the SOBOL phase is also included in these first trials of the Bayesian search. We provide the script [add_best_model_to_bayes_search.py](config_files/add_best_model_to_bayes_search.py) for such a purpose. To use it correctly, you need to have dumped the best model settings when creating the Bayes config files, as shown in the previous section. Then, start the search, so the corresponding checkpoint file is created. Once the search is underway, you stop it and run the following:
 
 ```sh
 python add_best_model_to_bayes_search.py --checkpoint checkpoint.pt --best_model dump_best_model
 ```
 
-The <em>checkpoint</em> parameter is used to indicate the location of the checkpoint corresponding to the Bayes search. Similarly, the <em>best_model</em> parameter is used to indicate the location of the settings of the trial that is to be added to the search space, which is the file created with the [create_bayes_config_files](config_files/create_bayes_config_files) script.
+The <em>checkpoint</em> parameter is used to indicate the location of the checkpoint corresponding to the Bayes search. Similarly, the <em>best_model</em> parameter is used to indicate the location of the settings of the trial that is to be added to the search space, which is the file created with the [create_bayes_config_files](config_files/create_bayes_config_files.py) script.
 
 ### Create data dumps with all trials
 
-Finally, the scripts [create_dumps.sh](scripts/create_dumps.sh) and [merge_csvs.sh](scripts/merge_csvs.sh) can be used to create a single CSV file per dataset with the results of all trials in the experiments. To do so, you may run this on the folder of each dataset:
+Finally, the scripts [create_dumps.sh](scripts/create_dumps.sh) and [merge_csvs.sh](scripts/merge-csvs.sh) can be used to create a single CSV file per dataset with the results of all trials in the experiments. To do so, you may run this on the folder of each dataset:
 
 ```sh
 sh create_dumps.sh kge.py scripts/iclr2020_keys.conf
