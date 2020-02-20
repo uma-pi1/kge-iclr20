@@ -54,7 +54,7 @@ The folder [config_files](config_files) contains the scripts to generate each co
 python create_config_files.py --prefix iclr2020
 ```
 
-This takes as input all config files with the given prefix and combines them with [templates_iclr2020.yaml](config_files/templates_iclr2020.yaml). The output is a folder with the same name of the prefix that contains all configuration files, organized in their specific folders. For each dataset, there is a single config file for each combination of train type (negative sampling, 1vsAll, etc.) and loss function.
+This takes as input all config files with the given prefix and combines them with [templates_iclr2020.yaml](config_files/templates_iclr2020.yaml). The output is a folder with the same name of the prefix that contains all configuration files, organized in their specific folders. For each dataset, there is a single config file for each combination of train type (negative sampling, 1vsAll, etc.) and loss function. Note that we set the loss to "kl" for KL-divergence in our experiments, which is equivalent to "ce" for cross-entropy, as reported in the paper.
 
 ### Adding a new model to the search space
 
