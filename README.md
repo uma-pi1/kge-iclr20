@@ -111,7 +111,8 @@ This produces a single CSV file with the result of each trial for that dataset, 
 To produce the plots used in our work, feed your data dumps to the script [create_plots.py](scripts/create_plots.py) like so:
 
 ```sh
-python create_plots.py --csv iclr2020-fb15k-237-all-trials.csv,iclr2020-wnrr-all-trials.csv --output_folder iclr2020-plots
+python create_plots.py --csv iclr2020-fb15k-237-all-trials.csv,iclr2020-wnrr-all-trials.csv \
+--output_folder iclr2020-plots
 ```
 
 ### Create the tables
@@ -119,7 +120,8 @@ python create_plots.py --csv iclr2020-fb15k-237-all-trials.csv,iclr2020-wnrr-all
 To produce the tables used in our work, feed your data dumps to the script [create_tables.py](scripts/create_tables.py) like so:
 
 ```sh
-python create_tables.py --all_trials iclr2020-fb15k-237-all-trials.csv,iclr2020-wnrr-all-trials.csv --best_trials iclr2020-fb15k-237-best-trials,iclr2020-wnrr-best-trials
+python create_tables.py --all_trials iclr2020-fb15k-237-all-trials.csv,iclr2020-wnrr-all-trials.csv \
+--best_trials iclr2020-fb15k-237-best-trials,iclr2020-wnrr-best-trials
 ```
 
 ## How to cite
