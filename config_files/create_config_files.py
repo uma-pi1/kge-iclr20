@@ -38,7 +38,7 @@ if __name__ == "__main__":
         with open(args.model, "r") as file:
             loaded_models.append(yaml.load(file, Loader=yaml.SafeLoader))
         # create output folder
-        root_folder = args.model
+        root_folder = os.path.splitext(args.model)[0]
 
     # create output folder
     os.mkdir(root_folder)
