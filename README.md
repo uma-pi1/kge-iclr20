@@ -41,7 +41,9 @@ To conduct our experiments, we used the <em>LibKGE</em> framework available [her
 To retrieve the version that we used in the experiments use the following code 
 
 ```sh
-git clone https://github.com/uma-pi1/kge/releases/tag/4b2414a
+git clone https://github.com/uma-pi1/kge
+cd kge
+git checkout 4b2414a 
 ```
 
 ### Generate the config files
