@@ -38,6 +38,12 @@ The following describes how to use the scripts provided in this repository to re
 
 To conduct our experiments, we used the <em>LibKGE</em> framework available [here](https://github.com/uma-pi1/kge). The framework is controlled entirely by config files in YAML format, which we provide [here](data_dumps) for reproduction purposes.
 
+To retrieve the version that we used in the experiments use the following code 
+
+```sh
+git clone https://github.com/uma-pi1/kge/releases/tag/4b2414a
+```
+
 ### Generate the config files
 
 The folder [config_files](config_files) contains the scripts to generate each config file we used in our experiments as well as the config files themselves. The first phase of our experiments is a SOBOL (pseudo-random) hyperparameter search. The file [template_iclr2020.yaml](config_files/templates_iclr2020.yaml) is a <em>template</em> that contains the general hyperparameter space used for all models on this phase. In addition, each model used in the experimental study may have specific hyperparameters that need to be set, which are specified in separate config files, e.g. [iclr2020_rescal.yaml](config_files/iclr2020_rescal.yaml). To generate the config files to run the hyperparameter optimization, run the following inside the [config_files](config_files) folder:
