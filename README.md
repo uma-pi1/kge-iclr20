@@ -65,7 +65,7 @@ To optimize a new model with the same search space, add the model to [LibKGE](ht
 Once the config files are created, run the following on each of those folders to start the hyperparameter optimization specified in each config file:
 
 ```sh
-python kge.py resume . --search.num_workers 4 --search.device_pool cuda:0,cuda:1
+kge resume . --search.num_workers 4 --search.device_pool cuda:0,cuda:1
 ```
 
 This command runs 4 trials (arms) of the search space simultaneously using two GPUs. The number of trials as well as the devices used can be specified at will, and they are distributed uniformly. For more details on our to use our <em>LibKGE</em> framework, see [here](https://github.com/uma-pi1/kge).
@@ -95,7 +95,7 @@ The <em>checkpoint</em> parameter is used to indicate the location of the checkp
 Finally, the scripts [create_dumps.sh](scripts/create_dumps.sh) and [merge_csvs.sh](scripts/merge_csvs.sh) can be used to create a single CSV file per dataset with the results of all trials in the experiments. To do so, you may run this on the folder of each dataset:
 
 ```sh
-sh create_dumps.sh kge.py scripts/iclr2020_keys.conf
+sh create_dumps.sh scripts/iclr2020_keys.conf
 ```
 
 The first parameter indicates the location of the <em>LibKGE</em> executable and the second indicates the set of attributes in the output CSV file ([iclr2020_keys.conf](scripts/iclr2020_keys.conf). The output is a CSV file with the result of all trials for each combination of training type and loss function. To merge all of these entries into a single CSV, run the following on the folder of each dataset:
