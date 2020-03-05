@@ -1,0 +1,64 @@
+KvsAll:
+  label_smoothing: 0.3
+dataset:
+  name: wnrr
+eval:
+  batch_size: 256
+  metrics_per:
+    relation_type: true
+  trace_level: example
+job:
+  device: cuda:2
+lookup_embedder:
+  dim: 128
+  initialize: uniform_
+  initialize_args:
+    normal_:
+      mean: 0.0
+      std: 0.040050258996206144
+    uniform_:
+      a: -0.4063789847256075
+    xavier_normal_:
+      gain: 1.0
+    xavier_uniform_:
+      gain: 1.0
+  regularize_args:
+    p: 3
+model: reciprocal_relations_model
+negative_sampling:
+  implementation: batch
+  num_samples:
+    p: -1
+reciprocal_relations_model:
+  base_model:
+    relation_embedder:
+      dim: 16384
+    type: rescal
+rescal:
+  entity_embedder:
+    dropout: -0.29821809173392233
+    regularize_weight: 1.3658474629178261e-14
+  relation_embedder:
+    dropout: 0.23784801073601625
+    regularize_weight: 2.5698957474671138e-15
+train:
+  auto_correct: true
+  batch_size: 128
+  loss_arg: 1.0
+  lr_scheduler: ReduceLROnPlateau
+  lr_scheduler_args:
+    factor: 0.95
+    mode: max
+    patience: 8
+    threshold: 0.0001
+  max_epochs: 400
+  optimizer: Adam
+  optimizer_args:
+    lr: 0.0008535391032574453
+valid:
+  early_stopping:
+    min_threshold:
+      epochs: 50
+      metric_value: 0.05
+    patience: 10
+

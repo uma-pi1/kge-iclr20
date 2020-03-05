@@ -1,0 +1,63 @@
+dataset:
+  name: fb15k-237
+distmult:
+  entity_embedder:
+    dropout: 0.4196834675552332
+    regularize_weight: 1.408318976944572e-09
+  relation_embedder:
+    dropout: 0.40971036404279193
+    regularize_weight: 4.09962805784347e-15
+eval:
+  batch_size: 256
+  metrics_per:
+    relation_type: true
+  trace_level: example
+job:
+  device: cuda:3
+lookup_embedder:
+  dim: 256
+  initialize: uniform_
+  initialize_args:
+    normal_:
+      mean: 0.0
+      std: 0.04037805388365049
+    uniform_:
+      a: -0.9352212163936202
+    xavier_normal_:
+      gain: 1.0
+    xavier_uniform_:
+      gain: 1.0
+  regularize_args:
+    p: 3
+    weighted: true
+model: reciprocal_relations_model
+negative_sampling:
+  implementation: batch
+  num_samples:
+    o: 402
+    p: -1
+    s: 255
+reciprocal_relations_model:
+  base_model:
+    type: distmult
+train:
+  auto_correct: true
+  batch_size: 1024
+  loss_arg: 1.0
+  lr_scheduler: ReduceLROnPlateau
+  lr_scheduler_args:
+    factor: 0.95
+    mode: max
+    patience: 6
+    threshold: 0.0001
+  max_epochs: 400
+  optimizer_args:
+    lr: 0.15953749294870845
+  type: negative_sampling
+valid:
+  early_stopping:
+    min_threshold:
+      epochs: 50
+      metric_value: 0.05
+    patience: 10
+

@@ -1,0 +1,58 @@
+complex:
+  entity_embedder:
+    dropout: 0.3592749142853321
+    regularize_weight: 4.5230047706178325e-06
+  relation_embedder:
+    dropout: 0.3112283826796357
+    regularize_weight: 4.192985917075565e-10
+dataset:
+  name: wnrr
+eval:
+  batch_size: 256
+  metrics_per:
+    relation_type: true
+  trace_level: example
+job:
+  device: cuda:1
+lookup_embedder:
+  dim: 128
+  initialize: uniform_
+  initialize_args:
+    normal_:
+      mean: 0.0
+      std: 0.0005472140383629246
+    uniform_:
+      a: -0.28148249060722197
+    xavier_normal_:
+      gain: 1.0
+    xavier_uniform_:
+      gain: 1.0
+model: complex
+negative_sampling:
+  implementation: batch
+  num_samples:
+    p: -1
+reciprocal_relations_model:
+  base_model:
+    type: complex
+train:
+  auto_correct: true
+  batch_size: 512
+  loss_arg: 1.0
+  lr_scheduler: ReduceLROnPlateau
+  lr_scheduler_args:
+    factor: 0.95
+    mode: max
+    patience: 5
+    threshold: 0.0001
+  max_epochs: 400
+  optimizer_args:
+    lr: 0.5255808623927111
+  type: 1vsAll
+valid:
+  early_stopping:
+    min_threshold:
+      epochs: 50
+      metric_value: 0.05
+    patience: 10
+
