@@ -26,6 +26,11 @@ Best performance of all the models tested in our empirical study:
 | [ComplEx](http://proceedings.mlr.press/v48/trouillon16.pdf)                                           | 0.475 |  0.438 |  0.490 |   0.547 | [config.yaml](https://github.com/uma-pi1/kge-iclr20/blob/master/config_files/iclr2020/wnrr/complex-1vsAll-kl-bo-best/config.yaml) |           [1vsAll-kl](http://web.informatik.uni-mannheim.de/pi1/iclr2020-models/wnrr-checkpoint-complex-1vsAll-kl-bo-best.pt) |
 | [ConvE](https://arxiv.org/abs/1707.01476)                                                             | 0.442 |  0.411 |  0.451 |   0.504 | [config.yaml](https://github.com/uma-pi1/kge-iclr20/blob/master/config_files/iclr2020/wnrr/conve-KvsAll-kl-bo-best/config.yaml) |             [KvsAll-kl](http://web.informatik.uni-mannheim.de/pi1/iclr2020-models/wnrr-checkpoint-conve-KvsAll-kl-bo-best.pt) |
 
+#### WIKIDATA5M
+
+|                                                                                                       |   MRR | Hits@1 | Hits@3 | Hits@10 | Config file |                                                                                                                                                 Pretrained model |
+|-------------------------------------------------------------------------------------------------------|------:|-------:|-------:|--------:|--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [ComplEx](http://proceedings.mlr.press/v48/trouillon16.pdf)                                           | 0.295 |  0.238 |  0.327 |  0.394 | [config.yaml](http://web.informatik.uni-mannheim.de/pi1/libkge-models/wikidata5m/complex-negative_sampling-kl/config.yaml) |           [NegSamp-kl](http://web.informatik.uni-mannheim.de/pi1/libkge-models/wikidata5m/complex-negative_sampling-kl/checkpoint_best.pt) |
 
 ## ICLR 2020 data dumps
 
@@ -39,12 +44,12 @@ The following describes how to use the scripts provided in this repository to re
 
 To conduct our experiments, we used the <em>LibKGE</em> framework available [here](https://github.com/uma-pi1/kge). The framework is controlled entirely by config files in YAML format, which we provide [here](data_dumps) for reproduction purposes.
 
-To retrieve the version that we used in the experiments use the following code 
+To retrieve the version that we used in the experiments use the following code
 
 ```sh
 git clone https://github.com/uma-pi1/kge
 cd kge
-git checkout 4b2414a 
+git checkout 4b2414a
 ```
 
 ### Generate the config files
