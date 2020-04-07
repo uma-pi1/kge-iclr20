@@ -5,8 +5,6 @@ eval:
   metrics_per:
     relation_type: true
   trace_level: example
-job:
-  device: cuda:3
 lookup_embedder:
   dim: 128
   initialize_args:
