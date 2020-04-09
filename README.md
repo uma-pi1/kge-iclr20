@@ -32,7 +32,7 @@ The results of each of the trials we run for ICLR 2020 can be found in [data_dum
 
 ## Reproducing our experiments
 
-The following describes how to use the scripts provided in this repository to reproduce our experiments.
+The following describes how to use the scripts provided in this repository to reproduce our experiments. These scripts are highly specific, and you will likely need to adapt them to your setting.
 
 ### Code
 
@@ -105,6 +105,26 @@ sh merge_csvs.sh
 ```
 
 This produces a single CSV file with the result of each trial for that dataset, like those we provide in the [data_dumps](data_dumps) folder.
+
+### Train best models 5 times
+
+To produce the config file to train the best models 5 times, run the following script [create_best_models_search_files.py](config_files/create_best_models_search_files.py) on each dataset's folder:
+
+```sh
+python create_best_models_search_files.py --prefix complex
+```
+
+Using [create_dumps.sh](scripts/create_dumps.sh) and [merge_csvs.sh](scripts/merge_csvs.sh) of these folders, you can produce a CSV that includes only the best trials, which are useful for the script that generates tables.
+
+### Produce config files for the best models
+
+To generate config files for training the best models obtained in the search, you need [create_best_models_config_files.sh](scripts/create_best_models_search_files.sh) and [get_best_trial.py](config_files/get_best_trial.py) in each dataset folder. Then run:
+
+```sh
+sh create_best_models_config_files.sh
+```
+
+This script assumes you've created and trained the best models 5 times as instructed in the previous section. The output files appear in the corresponding dataset's folder under the name "dataset_model_config_checkpoint_best.yaml".
 
 ### Plot the results
 
