@@ -118,7 +118,7 @@ Using [create_dumps.sh](scripts/create_dumps.sh) and [merge_csvs.sh](scripts/mer
 
 ### Produce config files for the best models
 
-To generate config files for training the best models obtained in the search, you need [create_best_models_config_files.sh](scripts/create_best_models_search_files.sh) and [get_best_trial.py](config_files/get_best_trial.py) in each dataset folder. Then run:
+To generate config files for training the best models obtained in the search, you need [create_best_models_config_files.sh](scripts/create_best_models_config_files.sh) and [get_best_trial.py](scripts/get_best_trial.py) in each dataset folder. Then run:
 
 ```sh
 sh create_best_models_config_files.sh
