@@ -5,6 +5,9 @@ eval:
   metrics_per:
     relation_type: true
   trace_level: example
+import:
+- transe
+- reciprocal_relations_model
 job:
   device: cuda:2
 lookup_embedder:

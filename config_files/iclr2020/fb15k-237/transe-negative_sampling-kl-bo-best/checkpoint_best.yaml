@@ -5,6 +5,11 @@ eval:
   metrics_per:
     relation_type: true
   trace_level: example
+import:
+- reciprocal_relations_model
+- transe
+job:
+  device: cuda:3
 lookup_embedder:
   dim: 128
   initialize: uniform_
@@ -20,7 +25,6 @@ lookup_embedder:
       gain: 1.0
   regularize: ''
 model: reciprocal_relations_model
-import: transe
 negative_sampling:
   num_samples:
     o: 192

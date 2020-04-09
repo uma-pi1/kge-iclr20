@@ -14,6 +14,9 @@ eval:
   metrics_per:
     relation_type: true
   trace_level: example
+import:
+- distmult
+- reciprocal_relations_model
 job:
   device: cuda:1
 lookup_embedder:

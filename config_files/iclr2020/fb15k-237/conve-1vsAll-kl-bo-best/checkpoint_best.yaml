@@ -15,6 +15,11 @@ eval:
   metrics_per:
     relation_type: true
   trace_level: example
+import:
+- conve
+- reciprocal_relations_model
+job:
+  device: cuda:3
 lookup_embedder:
   dim: 256
   initialize: xavier_normal_
@@ -32,7 +37,6 @@ lookup_embedder:
     p: 3
     weighted: true
 model: reciprocal_relations_model
-import: conve
 negative_sampling:
   implementation: batch
   num_samples:
