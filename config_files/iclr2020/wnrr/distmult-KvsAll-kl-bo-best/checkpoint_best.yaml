@@ -15,10 +15,8 @@ eval:
     relation_type: true
   trace_level: example
 import:
-- distmult
 - reciprocal_relations_model
-job:
-  device: cuda:1
+- distmult
 lookup_embedder:
   dim: 512
   initialize: uniform_

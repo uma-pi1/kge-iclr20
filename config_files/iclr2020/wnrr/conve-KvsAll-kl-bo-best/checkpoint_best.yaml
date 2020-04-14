@@ -21,8 +21,6 @@ eval:
 import:
 - reciprocal_relations_model
 - conve
-job:
-  device: cuda:1
 lookup_embedder:
   dim: 512
   initialize: xavier_normal_

@@ -8,10 +8,8 @@ eval:
     relation_type: true
   trace_level: example
 import:
-- rescal
 - reciprocal_relations_model
-job:
-  device: cuda:2
+- rescal
 lookup_embedder:
   dim: 128
   initialize: uniform_

@@ -6,10 +6,8 @@ eval:
     relation_type: true
   trace_level: example
 import:
-- reciprocal_relations_model
 - transe
-job:
-  device: cuda:3
+- reciprocal_relations_model
 lookup_embedder:
   dim: 128
   initialize: uniform_

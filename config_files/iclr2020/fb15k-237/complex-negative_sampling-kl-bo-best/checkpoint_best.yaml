@@ -15,8 +15,6 @@ eval:
 import:
 - reciprocal_relations_model
 - complex
-job:
-  device: cuda:3
 lookup_embedder:
   dim: 256
   initialize: uniform_

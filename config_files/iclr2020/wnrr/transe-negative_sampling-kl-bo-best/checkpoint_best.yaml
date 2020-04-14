@@ -8,8 +8,6 @@ eval:
 import:
 - transe
 - reciprocal_relations_model
-job:
-  device: cuda:2
 lookup_embedder:
   dim: 512
   initialize: xavier_normal_
