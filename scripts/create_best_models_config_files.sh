@@ -10,7 +10,7 @@ for d in *best*/ ; do
 	cd $trial_folder
 	echo 'Dumping config of best '$model' for '$dataset'...'
 	output_file=$dataset'-'$model'-config-checkpoint_best.yaml'
-	kge dump config checkpoint_best.pt --exclude search ax_search dataset.files > $output_file
+	kge dump config checkpoint_best.pt --exclude search ax_search dataset.files job.device > $output_file
 	mv $output_file ../../$output_file
 	cd ../..
 done
