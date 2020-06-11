@@ -1,6 +1,8 @@
 # You CAN Teach an Old Dog New Tricks! On Training Knowledge Graph Embeddings
 
-This repository contains the data dumps of all the results we produced, as well as the scripts to reproduce the experiments conducted for the paper ["You CAN Teach an Old Dog New Tricks! On Training Knowledge Graph Embeddings"](https://openreview.net/forum?id=BkxSmlBFvr) published at ICLR 2020. In this work, we conduct an extensive experimental study on the effect of hyperparameter optimization on various Knowledge Graph Embedding (KGE) models. To conduct our experiments, we used the [LibKGE](https://github.com/uma-pi1/kge) framework.
+This repository contains the data dumps of all the results we produced, as well as the scripts to reproduce the experiments conducted for the paper ["You CAN Teach an Old Dog New Tricks! On Training Knowledge Graph Embeddings"](https://openreview.net/forum?id=BkxSmlBFvr) published at ICLR 2020. In this work, we conduct an extensive experimental study on the effect of hyperparameter optimization on various Knowledge Graph Embedding (KGE) models. 
+
+To conduct our experiments, we used the [LibKGE](https://github.com/uma-pi1/kge) framework. Since this framework is under continuous development, the instructions and models given here are *tied to a specific version* of that framework (see below). The LibKGE website contains updated models and configurations options for the most recent version of LibKGE.
 
 ## Virtual Poster in ICLR2020
 
