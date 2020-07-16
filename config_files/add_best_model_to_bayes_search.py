@@ -57,11 +57,6 @@ if __name__ == "__main__":
             else:
                 cp["parameters"][-1][key] = param_type(bm[key][0])
 
-        print("Reference key, value, value type: {}, {}, {}".format(key, bm[key][0], type(bm[key][0])))
-        print("  Created key, value: {}, {}, {}".format(key, cp["parameters"][-1][key], type(cp["parameters"][-1][key])))
-        print(param_type)
-        input()
-
     torch.save(cp, args.checkpoint)
 
     # done
