@@ -50,7 +50,7 @@ if __name__ == "__main__":
             if param_type == int:
                 cp["parameters"][-1][key] = param_type(float(bm[key][0]))
             elif param_type == bool:
-                if bm[key][0] == 'False':
+                if bm[key][0].lower() == 'false':
                     cp["parameters"][-1][key] = False
                 else:
                     cp["parameters"][-1][key] = True
