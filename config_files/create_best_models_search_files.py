@@ -94,8 +94,6 @@ if __name__ == "__main__":
                 if "values" in next_line or "bounds" in next_line:
                     # add fixed type
                     output_file.write("\n" + "      type: fixed")
-                    # drop values or bounds
-                    next_line = next(best_model_config)
                     # add fixed value
                     if isinstance(best_model[ax_param], str) and not best_model[ax_param]:
                         print("This is being treated as an empty string:", ax_param)
@@ -106,6 +104,10 @@ if __name__ == "__main__":
                             output_file.write("\n      value: " + str(int(best_model[ax_param])))
                         else:
                             output_file.write("\n      value: " + str(best_model[ax_param]))
+                    # next line
+                    next_line = next(best_model_config, -1)
+                    if next_line == -1:
+                        break
                     new_line = next_line.strip("\n")
                     if " name: " in new_line:
                         ax_param = new_line.split(": ")[-1]
